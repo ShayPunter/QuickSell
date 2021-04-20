@@ -10,6 +10,7 @@
 	<maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.scm.id>github</project.scm.id>
   </properties>
 
   <repositories>
@@ -70,6 +71,10 @@
         </dependency>
     </dependencies>
 
+    <scm>
+        <developerConnection>scm:git:https://github.com/ajavageek/renamer-swing.git</developerConnection>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
@@ -128,5 +133,13 @@
             </resource>
         </resources>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub</name>
+            <url>https://maven.pkg.github.com/ShayPunter/QuickSell</url>
+        </repository>
+    </distributionManagement>
 
 </project>
