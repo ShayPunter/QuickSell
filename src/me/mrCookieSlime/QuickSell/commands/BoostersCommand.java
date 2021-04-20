@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class BoostersCommand extends BaseCommand {
 
     @Default
-    public static void onDefault(CommandSender sender, String shopName) {
+    public static void onDefault(CommandSender sender) {
         if (sender instanceof Player)
             BoosterMenu.showBoosterOverview((Player) sender);
     }
