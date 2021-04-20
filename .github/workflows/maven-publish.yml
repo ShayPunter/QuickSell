@@ -30,11 +30,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
+      - name: Set Release version env variable
+        run: |
+          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
       - name: Automatic Releases
         uses: marvinpinto/action-automatic-releases@v1.1.1
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${project.version}
+          automatic_release_tag: "${{ env.RELEASE_VERSION }}"
           prerelease: false
           run: mvn -B deploy --file pom.xml
           files: |
