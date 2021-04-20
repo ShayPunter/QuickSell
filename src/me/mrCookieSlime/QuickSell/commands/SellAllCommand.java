@@ -30,11 +30,6 @@ public class SellAllCommand extends BaseCommand {
             return;
         }
 
-        if (Shop.list().size() == 1) {
-            ShopMenu.open((Player) sender, Shop.list().get(0));
-            return;
-        }
-
         Shop shop = Shop.getShop(shopName);
         if (shop != null) {
             if (!shop.hasUnlocked((Player) sender)) {
