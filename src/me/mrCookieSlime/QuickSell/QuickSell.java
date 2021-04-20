@@ -1,6 +1,9 @@
 package me.mrCookieSlime.QuickSell;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,9 +66,17 @@ public class QuickSell extends JavaPlugin {
 		setupMessages();
 		local.save();
 
-		if (!new File("data-storage/QuickSell/boosters/").exists()) {
-			if (!new File("data-storage/QuickSell/boosters").mkdirs())
-				log(Level.SEVERE, "Unable to create the boosters file, boosters will NOT work!");
+		if (!new File(getDataFolder() + File.separator + "data-storage/boosters/").exists())
+			new File(getDataFolder() + File.separator + "data-storage/boosters/").mkdirs();
+
+		// Move any existing root data-storage over to the plugin folder
+		if (new File("data-storage/QuickSell/boosters/").exists()) {
+			File dir = new File("data-storage/QuickSell/boosters/");
+			try {
+				Files.move(dir.toPath(), Paths.get(getDataFolder() + File.separator + "data-storage/boosters/"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		setupConfigOptions();
@@ -91,7 +102,6 @@ public class QuickSell extends JavaPlugin {
 		if (isCitizensInstalled()) new CitizensListener(this);
 
 		// Commands
-
 
 		for (int i = 0; i < 1000; i++) {
 			if (new File("data-storage/QuickSell/boosters/" + i + ".booster").exists()) {
