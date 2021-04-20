@@ -71,7 +71,7 @@ public class Booster {
 	public Booster(int id) throws ParseException {
 		active.add(this);
 		this.id = id;
-		this.cfg = new Config(new File("data-storage/QuickSell/boosters/" + id + ".booster"));
+		this.cfg = new Config(new File(QuickSell.getInstance().getDataFolder() + File.separator + "data-storage/boosters/" + id + ".booster"));
 		if (cfg.contains("type")) this.type = BoosterType.valueOf(cfg.getString("type"));
 		else {
 			cfg.setValue("type", BoosterType.MONETARY.toString());
@@ -128,12 +128,12 @@ public class Booster {
 		
 		if (!infinite) {
 			for (int i = 0; i < 1000; i++) {
-				if (!new File("data-storage/QuickSell/boosters/" + i + ".booster").exists()) {
+				if (!new File(QuickSell.getInstance().getDataFolder() + File.separator + "data-storage/boosters/" + i + ".booster").exists()) {
 					this.id = i;
 					break;
 				}
 			}
-			this.cfg = new Config(new File("data-storage/QuickSell/boosters/" + id + ".booster"));
+			this.cfg = new Config(new File(QuickSell.getInstance().getDataFolder() + File.separator + "data-storage/boosters/" + id + ".booster"));
 			cfg.setValue("type", type.toString());
 			cfg.setValue("owner", getOwner());
 			cfg.setValue("multiplier", multiplier);
@@ -177,7 +177,7 @@ public class Booster {
 				}
 			}
 		}
-		if (!infinite) new File("data-storage/QuickSell/boosters/" + getID() + ".booster").delete();
+		if (!infinite) new File(QuickSell.getInstance().getDataFolder() + File.separator + "data-storage/boosters/" + getID() + ".booster").delete();
 		active.remove(this);
 	}
 	

@@ -1,6 +1,9 @@
 package me.mrCookieSlime.QuickSell;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +53,18 @@ public class QuickSell extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		if (!new File("data-storage/QuickSell/boosters/").exists()) new File("data-storage/QuickSell/boosters").mkdirs();
+		if (!new File(getDataFolder() + File.separator + "data-storage/boosters/").exists())
+			new File(getDataFolder() + File.separator + "data-storage/boosters/").mkdirs();
+
+		// Move any existing root data-storage over to the plugin folder
+		if (new File("data-storage/QuickSell/boosters/").exists()) {
+			File dir = new File("data-storage/QuickSell/boosters/");
+			try {
+				Files.move(dir.toPath(), Paths.get(getDataFolder() + File.separator + "data-storage/boosters/"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		instance = this;
 
