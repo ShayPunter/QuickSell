@@ -36,6 +36,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${project.version}"
           prerelease: false
-          run: mvn -B package --file pom.xml
+          run: mvn -B deploy --file pom.xml
           files: |
             *.jar
