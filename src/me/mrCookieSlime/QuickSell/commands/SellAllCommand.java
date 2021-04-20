@@ -39,6 +39,8 @@ public class SellAllCommand extends BaseCommand {
 
             shop.sellall((Player) sender, "", SellEvent.Type.SELLALL);
             return;
+        } else {
+            QuickSell.local.sendMessage(sender, "messages.unknown-shop", false);
         }
 
         if (QuickSell.cfg.getBoolean("options.open-only-shop-with-permission")) {

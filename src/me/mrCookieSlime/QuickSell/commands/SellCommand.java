@@ -43,6 +43,8 @@ public class SellCommand extends BaseCommand {
 
             ShopMenu.openMenu((Player) sender);
             return;
+        } else {
+            QuickSell.local.sendMessage(sender, "messages.unknown-shop", false);
         }
 
         if (QuickSell.cfg.getBoolean("options.open-only-shop-with-permission")) {
