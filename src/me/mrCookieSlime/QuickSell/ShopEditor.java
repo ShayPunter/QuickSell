@@ -177,7 +177,7 @@ public class ShopEditor implements Listener {
 			@Override
 			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				if (p.getItemInHand() != null && p.getItemInHand().getType() != null && p.getItemInHand().getType() != Material.AIR) {
-					QuickSell.cfg.setValue("shops." + shop.getID() + ".itemtype", p.getItemInHand().getType().toString() + "-" + p.getItemInHand().getData().getData());
+					QuickSell.cfg.setValue("shops." + shop.getID() + ".itemtype", p.getItemInHand().getType().toString());
 					QuickSell.cfg.save();
 					quicksell.reload();
 				}
