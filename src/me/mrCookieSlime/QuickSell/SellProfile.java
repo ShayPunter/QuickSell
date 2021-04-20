@@ -23,7 +23,7 @@ public class SellProfile {
 	public SellProfile(Player p) {
 		uuid = p.getUniqueId();
 		transactions = new ArrayList<String>();
-		cfg = new Config(new File("data-storage/QuickSell/transactions/" + p.getUniqueId() + ".log"));
+		cfg = new Config(new File(QuickSell.getInstance().getDataFolder() + File.separator + "data-storage/transactions/" + p.getUniqueId() + ".log"));
 		profiles.put(uuid, this);
 		
 		if (QuickSell.cfg.getBoolean("shop.enable-logging")) {
