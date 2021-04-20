@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import co.aikar.commands.PaperCommandManager;
 import io.github.thebusybiscuit.cscorelib2.config.Config;
 import me.mrCookieSlime.QuickSell.utils.Localization;
 import me.mrCookieSlime.QuickSell.utils.PluginUtils;
@@ -45,7 +46,7 @@ public class QuickSell extends JavaPlugin {
 	public static Map<UUID, Shop> shop;
 	public static List<SellEvent> events;
 	
-	private ShopEditor editor;
+	public ShopEditor editor;
 	private boolean citizens = false, backpacks = false, mcmmo = false, prisongems = false;
 	public Config npcs;
 	
@@ -71,6 +72,7 @@ public class QuickSell extends JavaPlugin {
 
 		// Initiate Variables
 		instance = this;
+		PaperCommandManager commandManager = new PaperCommandManager(this);
 		shop = new HashMap<UUID, Shop>();
 		events = new ArrayList<SellEvent>();
 		editor = new ShopEditor(this);
@@ -87,6 +89,9 @@ public class QuickSell extends JavaPlugin {
 		new SellListener(this);
 		new XPBoosterListener(this);
 		if (isCitizensInstalled()) new CitizensListener(this);
+
+		// Commands
+
 
 		for (int i = 0; i < 1000; i++) {
 			if (new File("data-storage/QuickSell/boosters/" + i + ".booster").exists()) {
