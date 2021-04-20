@@ -27,20 +27,7 @@ public class SellAllCommand extends BaseCommand {
             return;
         }
 
-        Shop shop = Shop.getShop(shopName);
-        if (shop != null) {
-            if (!shop.hasUnlocked((Player) sender)) {
-                QuickSell.local.sendMessage(sender, "messages.no-access", false);
-                return;
-            }
-
-            shop.sellall((Player) sender, "", SellEvent.Type.SELLALL);
-            return;
-        } else {
-            QuickSell.local.sendMessage(sender, "messages.unknown-shop", false);
-        }
-
-        if (QuickSell.cfg.getBoolean("options.open-only-shop-with-permission")) {
+        if (shopName == null) {
             if (Shop.getHighestShop((Player) sender) == null) {
                 QuickSell.local.sendMessage(sender, "messages.no-access", false);
                 return;
@@ -49,7 +36,17 @@ public class SellAllCommand extends BaseCommand {
             return;
         }
 
-        QuickSell.local.sendMessage(sender, "commands.sellall.usage", false);
+        Shop shop = Shop.getShop(shopName);
+        if (shop != null) {
+            if (!shop.hasUnlocked((Player) sender)) {
+                QuickSell.local.sendMessage(sender, "messages.no-access", false);
+                return;
+            }
+
+            shop.sellall((Player) sender, "", SellEvent.Type.SELLALL);
+        } else {
+            QuickSell.local.sendMessage(sender, "messages.unknown-shop", false);
+        }
     }
 
 }
