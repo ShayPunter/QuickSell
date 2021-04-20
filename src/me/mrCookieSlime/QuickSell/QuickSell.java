@@ -120,7 +120,11 @@ public class QuickSell extends JavaPlugin {
 		SellProfile.profiles = null;
 		Booster.active = null;
 	}
-	
+
+	/**
+	 * Hooks into an economy plugin and returns if successful or not
+	 * @return Boolean
+	 */
 	private boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 	    if (economyProvider != null) {
