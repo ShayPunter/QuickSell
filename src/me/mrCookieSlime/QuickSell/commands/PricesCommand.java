@@ -21,18 +21,8 @@ public class PricesCommand extends BaseCommand {
 
     @Default
     public static void onDefault(CommandSender sender, String shopName) {
-        if (!QuickSell.cfg.getBoolean("options.enable-commands")) {
-            QuickSell.local.sendMessage(sender, "commands.disabled", false);
-            return;
-        }
-
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "This Command is only for Players"));
-            return;
-        }
-
-        if (Shop.list().size() == 1) {
-            ShopMenu.open((Player) sender, Shop.list().get(0));
             return;
         }
 
