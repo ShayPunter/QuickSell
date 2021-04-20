@@ -1,5 +1,9 @@
+#
+# Name: QuickSell
+# Author: mrCookieSlime
+# Maintainer: Shay Punter
+#
 options:
-  auto-update: true
   sell-gui-rows: 3
   locked-item: BARRIER
   sign-prefix: '&7[&eSell&7]'
