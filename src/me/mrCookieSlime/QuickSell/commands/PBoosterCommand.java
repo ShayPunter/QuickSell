@@ -19,14 +19,14 @@ public class PBoosterCommand extends BaseCommand {
         if (boosterType != null) {
             Booster booster = new PrivateBooster(boosterType, player, multi, duration);
             booster.activate();
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eYou have given " + player + " a " + multi + " " + boosterType + " booster for " + duration + " minutes!"));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eYou have given " + player + " a " + multi + "x " + boosterType + " booster for " + duration + " minutes!"));
             return;
         }
 
         for (BoosterType bt: BoosterType.values()) {
             Booster booster = new PrivateBooster(bt, player, multi, duration);
             booster.activate();
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eYou have given " + player + " a " + multi + " " + bt + " booster for " + duration + " minutes!"));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eYou have given " + player + " a " + multi + "x " + bt + " booster for " + duration + " minutes!"));
         }
     }
 
@@ -38,7 +38,7 @@ public class PBoosterCommand extends BaseCommand {
 
 
     private static void sendHelpMessage(CommandSender sender) {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7\u21E8 /pboosters <all/monetary/prisongems/exp/mcmmo/casino> <Player> <Multiplier> <Duration in Minutes> stopboosters"));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7\u21E8 /pboosters <all/monetary/prisongems/exp/mcmmo/casino> <Player> <Multiplier> <Duration in Minutes>"));
     }
 
 }
