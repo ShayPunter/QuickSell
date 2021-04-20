@@ -144,7 +144,7 @@ public class QuickSellCommand extends BaseCommand {
     }
 
     @Subcommand("stopboosters")
-    public static void stopBoosters(CommandSender sender, String player) {
+    public static void stopBoosters(CommandSender sender, @Optional String player) {
         Iterator<Booster> boosters = Booster.iterate();
 
         if (player == null) {

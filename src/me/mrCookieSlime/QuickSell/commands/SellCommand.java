@@ -3,6 +3,7 @@ package me.mrCookieSlime.QuickSell.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
 import me.mrCookieSlime.QuickSell.QuickSell;
 import me.mrCookieSlime.QuickSell.Shop;
 import me.mrCookieSlime.QuickSell.ShopMenu;
@@ -14,7 +15,7 @@ import org.bukkit.entity.Player;
 public class SellCommand extends BaseCommand {
 
     @Default
-    public static void onDefault(CommandSender sender, String shopName) {
+    public static void onDefault(CommandSender sender, @Optional String shopName) {
         if (!QuickSell.cfg.getBoolean("options.enable-commands")) {
             QuickSell.local.sendMessage(sender, "commands.disabled", false);
             return;
