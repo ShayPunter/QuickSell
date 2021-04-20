@@ -10,15 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Variable;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Clock;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Chat.TellRawMessage;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Chat.TellRawMessage.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Chat.TellRawMessage.HoverAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Math.DoubleHandler;
+import io.github.thebusybiscuit.cscorelib2.config.Config;
+import me.mrCookieSlime.QuickSell.utils.Variable;
 import me.mrCookieSlime.QuickSell.QuickSell;
 
+import me.mrCookieSlime.QuickSell.utils.chat.TellRawMessage;
+import me.mrCookieSlime.QuickSell.utils.maths.DoubleHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -116,9 +113,9 @@ public class Booster {
 					if ((this instanceof PrivateBooster && booster instanceof PrivateBooster) || (!(this instanceof PrivateBooster) && !(booster instanceof PrivateBooster))) {
 						booster.extend(this);
 						if (!silent) {
-							if (this instanceof PrivateBooster && Bukkit.getPlayer(getOwner()) != null) QuickSell.local.sendTranslation(Bukkit.getPlayer(getOwner()), "pbooster.extended." + type.toString(), false, new Variable("%time%", String.valueOf(this.getDuration())), new Variable("%multiplier%", String.valueOf(this.getMultiplier())));
+							if (this instanceof PrivateBooster && Bukkit.getPlayer(getOwner()) != null) QuickSell.local.sendMessage(Bukkit.getPlayer(getOwner()), "pbooster.extended." + type.toString(), false, new Variable("%time%", String.valueOf(this.getDuration())), new Variable("%multiplier%", String.valueOf(this.getMultiplier())));
 							else {
-								for (String message: QuickSell.local.getTranslation("booster.extended." + type.toString())) {
+								for (String message: QuickSell.local.getMessages("booster.extended." + type.toString())) {
 									Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', message.replace("%player%", this.getOwner()).replace("%time%", String.valueOf(this.getDuration())).replace("%multiplier%", String.valueOf(this.getMultiplier()))));
 								}
 							}
@@ -149,9 +146,9 @@ public class Booster {
 		
 		active.add(this);
 		if (!silent) {
-			if (this instanceof PrivateBooster && Bukkit.getPlayer(getOwner()) != null) QuickSell.local.sendTranslation(Bukkit.getPlayer(getOwner()), "pbooster.activate." + type.toString(), false, new Variable("%time%", String.valueOf(this.getDuration())), new Variable("%multiplier%", String.valueOf(this.getMultiplier())));
+			if (this instanceof PrivateBooster && Bukkit.getPlayer(getOwner()) != null) QuickSell.local.sendMessage(Bukkit.getPlayer(getOwner()), "pbooster.activate." + type.toString(), false, new Variable("%time%", String.valueOf(this.getDuration())), new Variable("%multiplier%", String.valueOf(this.getMultiplier())));
 			else {
-				for (String message: QuickSell.local.getTranslation("booster.activate." + type.toString())) {
+				for (String message: QuickSell.local.getMessages("booster.activate." + type.toString())) {
 					Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', message.replace("%player%", this.getOwner()).replace("%time%", String.valueOf(this.getDuration())).replace("%multiplier%", String.valueOf(this.getMultiplier()))));
 				}
 			}
@@ -172,10 +169,10 @@ public class Booster {
 	public void deactivate() {
 		if (!silent) {
 			if (this instanceof PrivateBooster) {
-				if (Bukkit.getPlayer(getOwner()) != null) QuickSell.local.sendTranslation(Bukkit.getPlayer(getOwner()), "pbooster.deactivate." + type.toString(), false, new Variable("%time%", String.valueOf(this.getDuration())), new Variable("%multiplier%", String.valueOf(this.getMultiplier())));
+				if (Bukkit.getPlayer(getOwner()) != null) QuickSell.local.sendMessage(Bukkit.getPlayer(getOwner()), "pbooster.deactivate." + type.toString(), false, new Variable("%time%", String.valueOf(this.getDuration())), new Variable("%multiplier%", String.valueOf(this.getMultiplier())));
 			}
 			else {
-				for (String message: QuickSell.local.getTranslation("booster.deactivate." + type.toString())) {
+				for (String message: QuickSell.local.getMessages("booster.deactivate." + type.toString())) {
 					Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', message.replace("%player%", this.getOwner()).replace("%time%", String.valueOf(this.getDuration())).replace("%multiplier%", String.valueOf(this.getMultiplier()))));
 				}
 			}
@@ -199,7 +196,7 @@ public class Booster {
 	public int getID()				{			return this.id;					}
 
 	public long formatTime() {
-		return ((getDeadLine().getTime() - Clock.getCurrentDate().getTime()) / (1000 * 60));
+		return ((getDeadLine().getTime() - new Date().getTime()) / (1000 * 60));
 	}
 	
 	public void addTime(int minutes) {
@@ -305,7 +302,7 @@ public class Booster {
 	}
 	
 	public void sendMessage(Player p, Variable... variables) {
-		List<String> messages = QuickSell.local.getTranslation(getMessage());
+		List<String> messages = QuickSell.local.getMessages(getMessage());
 		if (messages.isEmpty()) return;
 		try {
 			String message = ChatColor.translateAlternateColorCodes('&', messages.get(0).replace("%multiplier%", String.valueOf(this.multiplier)).replace("%minutes%", String.valueOf(this.formatTime())));
@@ -314,8 +311,8 @@ public class Booster {
 			}
 			new TellRawMessage()
 			.addText(message)
-			.addClickEvent(ClickAction.RUN_COMMAND, "/boosters")
-			.addHoverEvent(HoverAction.SHOW_TEXT, BoosterMenu.getTellRawMessage(this))
+			.addClickEvent(TellRawMessage.ClickAction.RUN_COMMAND, "/boosters")
+			.addHoverEvent(TellRawMessage.HoverAction.SHOW_TEXT, BoosterMenu.getTellRawMessage(this))
 			.send(p);
 		} catch (Exception e) {
 			e.printStackTrace();

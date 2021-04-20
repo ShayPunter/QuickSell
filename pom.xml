@@ -4,14 +4,14 @@
 
   <groupId>me.mrCookieSlime</groupId>
   <artifactId>QuickSell</artifactId>
-  <version>2.1</version>
+  <version>2.2</version>
   
   <properties>
-	<maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+	<maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
   <repositories>
     	<repository>
     		<id>paper-repo</id>
@@ -30,37 +30,18 @@
         	<url>http://repo.citizensnpcs.co/</url>
     	</repository>
     </repositories>
-	<build>
-        <finalName>${project.name} v${project.version}</finalName>
-        <sourceDirectory>${project.basedir}/src</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/tests/java</testSourceDirectory>
-        <testResources>
-        	<testResource>
-            	<directory>${project.basedir}/tests/resources</directory>
-          	</testResource>
-        </testResources>
-        <resources>
-            <resource>
-            	<directory>${basedir}/src</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>config.yml</include>
-                    <include>plugin.yml</include>
-                </includes>
-            </resource>
-        </resources>		
-    </build>
+
     <dependencies>
         <dependency>
-           	<groupId>org.bukkit</groupId>
-           	<artifactId>bukkit</artifactId>
-            <version>1.14.2-R0.1-SNAPSHOT</version>
+           	<groupId>org.spigotmc</groupId>
+           	<artifactId>spigot-api</artifactId>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-	        <groupId>com.github.TheBusyBiscuit</groupId>
-	        <artifactId>CS-CoreLib</artifactId>
-	        <version>v1.6.1</version>
-	    </dependency>
+            <groupId>com.github.thebusybiscuit</groupId>
+            <artifactId>CS-CoreLib2</artifactId>
+            <version>0.30.4</version>
+        </dependency>
 	    <dependency>
         	<groupId>com.github.MilkBowl</groupId>
         	<artifactId>VaultAPI</artifactId>
@@ -81,5 +62,71 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/PrisonUtils v1.6.11.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>io.github.thebusybiscuit.cscorelib2</pattern>
+                            <shadedPattern>me.mrCookieSlime.QuickSell.cscorelib2</shadedPattern>
+                        </relocation>
+                    </relocations>
+                    <filters>
+                        <filter>
+                            <artifact>com.github.thebusybiscuit:CS-CoreLib2</artifact>
+                            <includes>
+                                <include>**/cscorelib2/config/**</include>
+                                <include>**/cscorelib2/updater/**</include>
+                                <include>**/thebusybiscuit/cscorelib2/reflection/**</include>
+                                <include>**/thebusybiscuit/cscorelib2/inventory/**</include>
+                                <include>**/thebusybiscuit/cscorelib2/item/**</include>
+                            </includes>
+                        </filter>
+                    </filters>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <finalName>${project.name} v${project.version}</finalName>
+        <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/tests/java</testSourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/tests/resources</directory>
+            </testResource>
+        </testResources>
+        <resources>
+            <resource>
+                <directory>${basedir}/src</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>config.yml</include>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
 </project>

@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
+import me.mrCookieSlime.QuickSell.utils.Variable;
+import me.mrCookieSlime.QuickSell.utils.maths.DoubleHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,11 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Variable;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Math.DoubleHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Player.PlayerInventory;
 import me.mrCookieSlime.PrisonUtils.Backpacks;
 import me.mrCookieSlime.QuickSell.SellEvent.Type;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
@@ -50,7 +49,7 @@ public class Shop {
 		unlocked = new CustomItem(Material.getMaterial(QuickSell.cfg.getString("shops." + shop + ".itemtype")), name, lore.toArray(new String[lore.size()]));
 		
 		lore = new ArrayList<String>();
-		lore.add(ChatColor.translateAlternateColorCodes('&', QuickSell.local.getTranslation("messages.no-access").get(0)));
+		lore.add(ChatColor.translateAlternateColorCodes('&', QuickSell.local.getMessage("messages.no-access")));
 		for (String line: QuickSell.cfg.getStringList("shops." + shop + ".lore")) {
 			lore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
@@ -124,7 +123,7 @@ public class Shop {
 				p.getInventory().setItem(slot, null);
 			}
 		}
-		PlayerInventory.update(p);
+		p.getInventory();
 		sell(p, false, type, items.toArray(new ItemStack[items.size()]));
 	}
 
@@ -134,7 +133,7 @@ public class Shop {
 	
 	public void sell(Player p, boolean silent, Type type, ItemStack... soldItems) {
 		if (soldItems.length == 0) {
-			if (!silent) QuickSell.local.sendTranslation(p, "messages.no-items", false);
+			if (!silent) QuickSell.local.sendMessage(p, "messages.no-items", false);
 		}
 		else {
 			double money = 0.0;
@@ -169,22 +168,22 @@ public class Shop {
 					event.onSell(p, type, total, totalmoney);
 				}
 			}
-			else if (!silent && total > 0) QuickSell.local.sendTranslation(p, "messages.get-nothing", false);
-			if (!silent && sold < total && total > 0) QuickSell.local.sendTranslation(p, "messages.dropped", false);
+			else if (!silent && total > 0) QuickSell.local.sendMessage(p, "messages.get-nothing", false);
+			if (!silent && sold < total && total > 0) QuickSell.local.sendMessage(p, "messages.dropped", false);
 		}
-		PlayerInventory.update(p);
+		p.updateInventory();
 	}
 	
 	public double handoutReward(Player p, double totalmoney, int items, boolean silent) {
 		double money = totalmoney;
-		if (!silent) QuickSell.local.sendTranslation(p, "messages.sell", false, new Variable("{MONEY}", DoubleHandler.getFancyDouble(money)), new Variable("{ITEMS}", String.valueOf(items)));
+		if (!silent) QuickSell.local.sendMessage(p, "messages.sell", false, new Variable("{MONEY}", DoubleHandler.getFancyDouble(money)), new Variable("{ITEMS}", String.valueOf(items)));
 		for (Booster booster: Booster.getBoosters(p.getName())) {
 			if (booster.getType().equals(BoosterType.MONETARY)) {
 				if (!silent) booster.sendMessage(p, new Variable("{MONEY}", DoubleHandler.getFancyDouble(money * (booster.getMultiplier() - 1))));
 				money = money + money * (booster.getMultiplier() - 1);
 			}
 		}
-		if (!silent && !Booster.getBoosters(p.getName()).isEmpty()) QuickSell.local.sendTranslation(p, "messages.total", false, new Variable("{MONEY}", DoubleHandler.getFancyDouble(money)));
+		if (!silent && !Booster.getBoosters(p.getName()).isEmpty()) QuickSell.local.sendMessage(p, "messages.total", false, new Variable("{MONEY}", DoubleHandler.getFancyDouble(money)));
 		money = DoubleHandler.fixDouble(money, 2);
 		QuickSell.economy.depositPlayer(p, money);
 		return money;

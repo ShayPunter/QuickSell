@@ -5,7 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
+import io.github.thebusybiscuit.cscorelib2.inventory.ChestMenu;
+import io.github.thebusybiscuit.cscorelib2.inventory.ClickAction;
+import io.github.thebusybiscuit.cscorelib2.inventory.MenuClickHandler;
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
+import me.mrCookieSlime.QuickSell.utils.Variable;
+import me.mrCookieSlime.QuickSell.utils.maths.DoubleHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -15,15 +23,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
-
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Variable;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu.MenuClickHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu.MenuOpeningHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Math.DoubleHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.general.audio.Soundboard;
 
 public class ShopEditor implements Listener {
 	
@@ -62,7 +61,7 @@ public class ShopEditor implements Listener {
 				QuickSell.cfg.setValue("shops." + ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', e.getMessage())) + ".name", e.getMessage());
 				QuickSell.cfg.save();
 				
-				QuickSell.local.sendTranslation(e.getPlayer(), "commands.shop-created", false, new Variable("%shop%", e.getMessage()));
+				QuickSell.local.sendMessage(e.getPlayer(), "commands.shop-created", false, new Variable("%shop%", e.getMessage()));
 				
 				openEditor(e.getPlayer());
 				
@@ -77,7 +76,7 @@ public class ShopEditor implements Listener {
 				quicksell.reload();
 				
 				openShopEditor(e.getPlayer(), Shop.getShop(shop.getID()));
-				QuickSell.local.sendTranslation(e.getPlayer(), "editor.renamed-shop", false);
+				QuickSell.local.sendMessage(e.getPlayer(), "editor.renamed-shop", false);
 				
 				this.input.remove(e.getPlayer().getUniqueId());
 				break;
@@ -90,7 +89,7 @@ public class ShopEditor implements Listener {
 				quicksell.reload();
 				
 				openShopEditor(e.getPlayer(), Shop.getShop(shop.getID()));
-				QuickSell.local.sendTranslation(e.getPlayer(), "editor.permission-set-shop", false);
+				QuickSell.local.sendMessage(e.getPlayer(), "editor.permission-set-shop", false);
 				
 				this.input.remove(e.getPlayer().getUniqueId());
 				break;
@@ -103,26 +102,20 @@ public class ShopEditor implements Listener {
 	
 	public void openEditor(Player p) {
 		quicksell.reload();
-		ChestMenu menu = new ChestMenu("&6QuickSell - Shop Editor");
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(), "&6QuickSell - Shop Editor");
 		
-		menu.addMenuOpeningHandler(new MenuOpeningHandler() {
-			
-			@Override
-			public void onOpen(Player p) {
-				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1F);
-			}
-		});
+		menu.addMenuOpeningHandler((Consumer<Player>) p1 -> p1.playSound(p1.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1F));
 		
 		for (int i = 0; i < 54; i++) {
 			final Shop shop = Shop.list().size() > i ? Shop.list().get(i): null;
 			if (shop == null) {
 				menu.addItem(i, new CustomItem(Material.GOLD_NUGGET, "&cNew Shop", "", "&rLeft Click: &7Create a new Shop"));
 				menu.addMenuClickHandler(i, new MenuClickHandler() {
-					
+
 					@Override
-					public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
-						input.put(p.getUniqueId(), new Input(InputType.NEW_SHOP, slot));
-						QuickSell.local.sendTranslation(p, "editor.create-shop", false);
+					public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
+						input.put(p.getUniqueId(), new Input(InputType.NEW_SHOP, i));
+						QuickSell.local.sendMessage(p, "editor.create-shop", false);
 						p.closeInventory();
 						return false;
 					}
@@ -133,9 +126,9 @@ public class ShopEditor implements Listener {
 				menu.addMenuClickHandler(i, new MenuClickHandler() {
 					
 					@Override
-					public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
-						if (action.isRightClicked()) {
-							if (action.isShiftClicked())  {
+					public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
+						if (clickAction.isRightClick()) {
+							if (clickAction.isShiftClick())  {
 								List<String> list = new ArrayList<String>();
 								for (Shop shop: Shop.list()) {
 									list.add(shop.getID());
@@ -154,32 +147,27 @@ public class ShopEditor implements Listener {
 				});
 			}
 		}
-		
-		menu.open(p);
+
+		Bukkit.getScheduler().runTask(QuickSell.getInstance(), (runnable) -> menu.open(p));
 	}
 
 	public void openShopEditor(Player p, final Shop shop) {
 		quicksell.reload();
-		ChestMenu menu = new ChestMenu("&6QuickSell - Shop Editor");
-		
-		menu.addMenuOpeningHandler(new MenuOpeningHandler() {
-			
-			@Override
-			public void onOpen(Player p) {
-				p.playSound(p.getLocation(), Soundboard.getLegacySounds("BLOCK_NOTE_PLING", "NOTE_PLING"), 1F, 1F);
-			}
-		});
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(), "&6QuickSell - Shop Editor");
+
+		menu.addMenuOpeningHandler((Consumer<Player>) p1 -> p1.playSound(p1.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1F));
 		
 		menu.addItem(0, new CustomItem(Material.NAME_TAG, shop.getName(), "", "&rClick: &7Change Name"));
 		menu.addMenuClickHandler(0, new MenuClickHandler() {
-			
+
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				input.put(p.getUniqueId(), new Input(InputType.RENAME, shop));
-				QuickSell.local.sendTranslation(p, "editor.rename-shop", false);
+				QuickSell.local.sendMessage(p, "editor.rename-shop", false);
 				p.closeInventory();
 				return false;
 			}
+
 		});
 		
 		menu.addItem(1, new CustomItem(shop.getItem(ShopStatus.UNLOCKED), "&rDisplay Item", "", "&rClick: &7Change Item to the Item held in your Hand"));
@@ -187,7 +175,7 @@ public class ShopEditor implements Listener {
 			
 			@SuppressWarnings("deprecation")
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				if (p.getItemInHand() != null && p.getItemInHand().getType() != null && p.getItemInHand().getType() != Material.AIR) {
 					QuickSell.cfg.setValue("shops." + shop.getID() + ".itemtype", p.getItemInHand().getType().toString() + "-" + p.getItemInHand().getData().getData());
 					QuickSell.cfg.save();
@@ -202,9 +190,9 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(2, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				input.put(p.getUniqueId(), new Input(InputType.SET_PERMISSION, shop));
-				QuickSell.local.sendTranslation(p, "editor.set-permission-shop", false);
+				QuickSell.local.sendMessage(p, "editor.set-permission-shop", false);
 				p.closeInventory();
 				return false;
 			}
@@ -214,68 +202,63 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(3, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				openShopInheritanceEditor(p, shop);
 				return false;
 			}
 		});
-		
-		menu.open(p);
+
+		QuickSell.getInstance().getServer().getScheduler().runTask(QuickSell.getInstance(), (runnable) -> menu.open(p));
 	}
 
 	public void openShopContentEditor(Player p, final Shop shop, final int page) {
 		quicksell.reload();
-		ChestMenu menu = new ChestMenu("&6QuickSell - Shop Editor");
-		
-		menu.addMenuOpeningHandler(new MenuOpeningHandler() {
-			
-			@Override
-			public void onOpen(Player p) {
-				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1F);
-			}
-		});
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(), "&6QuickSell - Shop Editor");
+
+		menu.addMenuOpeningHandler((Consumer<Player>) p1 -> p1.playSound(p1.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1F));
 		
 		int index = 9;
 		final int pages = shop.getPrices().getInfo().size() / shop_size + 1;
 		
 		for (int i = 0; i < 4; i++) {
 			menu.addItem(i, new CustomItem(Material.GRAY_STAINED_GLASS_PANE, " "));
-			menu.addMenuClickHandler(i, (player, slot, item, action) -> false);
+			menu.addMenuClickHandler(i, (plugin, player, slot, item, action) -> false);
 		}
 		
 		menu.addItem(4, new CustomItem(Material.GOLD_INGOT, "&7\u21E6 Back"));
-		menu.addMenuClickHandler(4, (player, slot, item, action) -> {
+		menu.addMenuClickHandler(4, (plugin, player, slot, item, action) -> {
 			openEditor(p);
 			return false;
 		});
 		
 		for (int i = 5; i < 9; i++) {
 			menu.addItem(i, new CustomItem(Material.GRAY_STAINED_GLASS_PANE, " "));
-			menu.addMenuClickHandler(i, (player, slot, item, action) -> false);
+			menu.addMenuClickHandler(i, (plugin, player, slot, item, action) -> false);
 		}
 		
 		for (int i = 45; i < 54; i++) {
 			menu.addItem(i, new CustomItem(Material.GRAY_STAINED_GLASS_PANE, " "));
-			menu.addMenuClickHandler(i, (player, slot, item, action) -> false);
+			menu.addMenuClickHandler(i, (plugin, player, slot, item, action) -> false);
 		}
 		
 		menu.addItem(46, new CustomItem(Material.LIME_STAINED_GLASS_PANE, "&r\u21E6 Previous Page", "", "&7(" + page + " / " + pages + ")"));
 		menu.addMenuClickHandler(46, new MenuClickHandler() {
-			
+
 			@Override
-			public boolean onClick(Player p, int arg1, ItemStack arg2, ClickAction arg3) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				int next = page - 1;
 				if (next < 1) next = pages;
 				if (next != page) openShopContentEditor(p, shop, next);
 				return false;
 			}
+
 		});
 		
 		menu.addItem(52, new CustomItem(Material.LIME_STAINED_GLASS_PANE, "&rNext Page \u21E8", "", "&7(" + page + " / " + pages + ")"));
 		menu.addMenuClickHandler(52, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int arg1, ItemStack arg2, ClickAction arg3) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				int next = page + 1;
 				if (next > pages) next = 1;
 				if (next != page) openShopContentEditor(p, shop, next);
@@ -292,7 +275,7 @@ public class ShopEditor implements Listener {
 				menu.addMenuClickHandler(index, new MenuClickHandler() {
 					
 					@Override
-					public boolean onClick(Player p, int arg1, ItemStack arg2, ClickAction arg3) {
+					public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 						openItemEditor(p, shop);
 						return false;
 					}
@@ -303,15 +286,15 @@ public class ShopEditor implements Listener {
 				final String string = shop.getPrices().getItems().get(target);
 				final ItemStack item = shop.getPrices().getItem(string);
 				
-				menu.addItem(index, new CustomItem(item.getType(), item.getItemMeta().getDisplayName(), "&7Price (1): &6&$" + DoubleHandler.getFancyDouble(shop.getPrices().getPrice(string)), "", "&rLeft Click: &7Edit Price", "&rShift + Right Click: &7Remove this Item from this Shop"));
-				menu.addMenuClickHandler(index, (player, slot, stack, action) -> {
-					if (action.isShiftClicked() && action.isRightClicked()) {
+				menu.addItem(index, new CustomItem(item.getType(), item.getItemMeta().getDisplayName(), "&7Price (1): &6$" + DoubleHandler.getFancyDouble(shop.getPrices().getPrice(string)), "", "&rLeft Click: &7Edit Price", "&rShift + Right Click: &7Remove this Item from this Shop"));
+				menu.addMenuClickHandler(index, (plugin, player, slot, stack, action) -> {
+					if (action.isShiftClick() && action.isRightClick()) {
 						QuickSell.cfg.setValue("shops." + shop.getID() + ".price." + string, 0.0D);
 						QuickSell.cfg.save();
 						quicksell.reload();
 						openShopContentEditor(p, Shop.getShop(shop.getID()), 1);
 					}
-					else if (!action.isRightClicked()) openPriceEditor(p, Shop.getShop(shop.getID()), item, string, shop.getPrices().getPrice(string));
+					else if (!action.isRightClick()) openPriceEditor(p, Shop.getShop(shop.getID()), item, string, shop.getPrices().getPrice(string));
 					return false;
 				});
 				
@@ -319,8 +302,8 @@ public class ShopEditor implements Listener {
 			}
 			
 		}
-		
-		menu.open(p);
+
+		Bukkit.getScheduler().runTask(QuickSell.getInstance(), (runnable) -> menu.open(p));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -332,41 +315,41 @@ public class ShopEditor implements Listener {
 			return;
 		}
 		
-		ChestMenu menu = new ChestMenu("&6QuickSell - Shop Editor");
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(), "&6QuickSell - Shop Editor");
 		
 		menu.addMenuOpeningHandler((player) -> {
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1F);
 		});
 		
 		menu.addItem(4, item);
-		menu.addMenuClickHandler(4, (player, slot, stack, action) -> false);
+		menu.addMenuClickHandler(4, (plugin, player, slot, stack, action) -> false);
 		
 		menu.addItem(10, new CustomItem(Material.LIME_WOOL, "&2Material Only &7(e.g. STONE)", "&rAdds the Item above to the Shop", "&rThis Option is going to ignore", "&rany Item Names and such"));
-		menu.addMenuClickHandler(10, (player, slot, stack, action) -> {
+		menu.addMenuClickHandler(10, (plugin, player, slot, stack, action) -> {
 			QuickSell.cfg.setValue("shops." + shop.getID() + ".price." + item.getType().toString(), 1.0D);
 			QuickSell.cfg.save();
 			quicksell.reload();
 			openShopContentEditor(p, Shop.getShop(shop.getID()), 1);
 			
-			QuickSell.local.sendTranslation(p, "commands.price-set", false, new Variable("%item%", item.getType().toString()), new Variable("%shop%", shop.getName()), new Variable("%price%", "1.0"));
+			QuickSell.local.sendMessage(p, "commands.price-set", false, new Variable("%item%", item.getType().toString()), new Variable("%shop%", shop.getName()), new Variable("%price%", "1.0"));
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7&oYou can edit the Price afterwards."));
 			return false;
 		});
 		
 		menu.addItem(11, new CustomItem(Material.LIME_WOOL, "&2Material Only and exclude Metadata &7(e.g. STONE-nodata)", "&rAdds the Item above to the Shop", "&rThis Option is going to only take Items", "&rwhich are NOT renamed and do NOT have Lore"));
-		menu.addMenuClickHandler(11, (player, slot, stack, action) -> {
+		menu.addMenuClickHandler(11, (plugin, player, slot, stack, action) -> {
 			QuickSell.cfg.setValue("shops." + shop.getID() + ".price." + item.getType().toString() + "-nodata", 1.0D);
 			QuickSell.cfg.save();
 			quicksell.reload();
 			openShopContentEditor(p, Shop.getShop(shop.getID()), 1);
 			
-			QuickSell.local.sendTranslation(p, "commands.price-set", false, new Variable("%item%", item.getType().toString() + ":" + item.getData().getData()), new Variable("%shop%", shop.getName()), new Variable("%price%", "1.0"));
+			QuickSell.local.sendMessage(p, "commands.price-set", false, new Variable("%item%", item.getType().toString() + ":" + item.getData().getData()), new Variable("%shop%", shop.getName()), new Variable("%price%", "1.0"));
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7&oYou can edit the Price afterwards."));
 			return false;
 		});
 		
 		menu.addItem(12, new CustomItem(Material.CYAN_WOOL, "&2Material + Display Name &7(e.g. STONE named &5Cool Stone &7)", "&rAdds the Item above to the Shop", "&rThis Option is going to respect Display Names"));
-		menu.addMenuClickHandler(14, (player, slot, stack, action) -> {
+		menu.addMenuClickHandler(14, (player, slot, newitem, stack, action) -> {
 			if (!item.getItemMeta().hasDisplayName()) {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou can only choose this Option if the selected Item had a Display Name!"));
 				return false;
@@ -377,35 +360,35 @@ public class ShopEditor implements Listener {
 			quicksell.reload();
 			openShopContentEditor(player, Shop.getShop(shop.getID()), 1);
 			
-			QuickSell.local.sendTranslation(player, "commands.price-set", false, new Variable("%item%", item.getType().toString() + " named " + item.getItemMeta().getDisplayName()), new Variable("%shop%", shop.getName()), new Variable("%price%", "1.0"));
+			QuickSell.local.sendMessage(player, "commands.price-set", false, new Variable("%item%", item.getType().toString() + " named " + item.getItemMeta().getDisplayName()), new Variable("%shop%", shop.getName()), new Variable("%price%", "1.0"));
 			player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7&oYou can edit the Price afterwards."));
 			return false;
 		});
 		
 		menu.addItem(16, new CustomItem(Material.RED_WOOL, "&cCancel"));
-		menu.addMenuClickHandler(16, (player, slot, stack, action) -> {
+		menu.addMenuClickHandler(16, (player, slot, clickItem, stack, action) -> {
 			openShopContentEditor(player, Shop.getShop(shop.getID()), 1);
 			return false;
 		});
-		
-		menu.open(p);
+
+		Bukkit.getScheduler().runTask(QuickSell.getInstance(), (runnable) -> menu.open(p));
 	}
 	
 	public void openPriceEditor(Player p, final Shop shop, final ItemStack item, final String string, final double worth) {
-		ChestMenu menu = new ChestMenu("&6QuickSell - Shop Editor");
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(),"&6QuickSell - Shop Editor");
 		
 		menu.addMenuOpeningHandler((player) -> {
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1F);
 		});
 		
 		menu.addItem(4, new CustomItem(item, item.getItemMeta().getDisplayName(), "", "&8Price: &6$" + DoubleHandler.getFancyDouble(worth)));
-		menu.addMenuClickHandler(4, (player, slot, stack, action) -> false);
+		menu.addMenuClickHandler(4, (plugin, player, slot, stack, action) -> false);
 		
 		menu.addItem(9, new CustomItem(Material.GOLD_INGOT, "&7Price: &6$" + DoubleHandler.getFancyDouble(worth), "", "&7Left Click: &r+0.1", "&7Shift + Left Click: &r+1", "&7Right Click: &r-0.1", "&7Shift + Right Click: &r-1"));
-		menu.addMenuClickHandler(9, (player, slot, stack, action) -> {
+		menu.addMenuClickHandler(9, (player, slot, itemstack, stack, action) -> {
 			double price = worth;
-			if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 1: 0.1);
-			else price = price + (action.isShiftClicked() ? 1: 0.1);
+			if (action.isRightClick()) price = price - (action.isShiftClick() ? 1: 0.1);
+			else price = price + (action.isShiftClick() ? 1: 0.1);
 			if (price <= 0) price = 0.1;
 			openPriceEditor(p, shop, item, string, price);
 			return false;
@@ -413,26 +396,27 @@ public class ShopEditor implements Listener {
 		
 		menu.addItem(10, new CustomItem(Material.GOLD_INGOT, "&7Price: &6$" + DoubleHandler.getFancyDouble(worth), "", "&7Left Click: &r+10", "&7Shift + Left Click: &r+100", "&7Right Click: &r-10", "&7Shift + Right Click: &r-100"));
 		menu.addMenuClickHandler(10, new MenuClickHandler() {
-			
+
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack stack, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				double price = worth;
-				if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 100: 10);
-				else price = price + (action.isShiftClicked() ? 100: 10);
+				if (action.isRightClick()) price = price - (action.isShiftClick() ? 100: 10);
+				else price = price + (action.isShiftClick() ? 100: 10);
 				if (price <= 0) price = 0.1;
 				openPriceEditor(p, shop, item, string, price);
 				return false;
 			}
+
 		});
 		
 		menu.addItem(11, new CustomItem(Material.GOLD_INGOT, "&7Price: &6$" + DoubleHandler.getFancyDouble(worth), "", "&7Left Click: &r+1K", "&7Shift + Left Click: &r+10K", "&7Right Click: &r-1K", "&7Shift + Right Click: &r-10K"));
 		menu.addMenuClickHandler(11, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack stack, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				double price = worth;
-				if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 10000: 1000);
-				else price = price + (action.isShiftClicked() ? 10000: 1000);
+				if (action.isRightClick()) price = price - (action.isShiftClick() ? 10000: 1000);
+				else price = price + (action.isShiftClick() ? 10000: 1000);
 				if (price <= 0) price = 0.1;
 				openPriceEditor(p, shop, item, string, price);
 				return false;
@@ -443,10 +427,10 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(12, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack stack, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				double price = worth;
-				if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 1000000: 100000);
-				else price = price + (action.isShiftClicked() ? 1000000: 100000);
+				if (action.isRightClick()) price = price - (action.isShiftClick() ? 1000000: 100000);
+				else price = price + (action.isShiftClick() ? 1000000: 100000);
 				if (price <= 0) price = 0.1;
 				openPriceEditor(p, shop, item, string, price);
 				return false;
@@ -457,10 +441,10 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(13, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack stack, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				double price = worth;
-				if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 100000000: 10000000);
-				else price = price + (action.isShiftClicked() ? 100000000: 10000000);
+				if (action.isRightClick()) price = price - (action.isShiftClick() ? 100000000: 10000000);
+				else price = price + (action.isShiftClick() ? 100000000: 10000000);
 				if (price <= 0) price = 0.1;
 				openPriceEditor(p, shop, item, string, price);
 				return false;
@@ -471,10 +455,10 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(14, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack stack, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				double price = worth;
-				if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 10000000000D: 1000000000);
-				else price = price + (action.isShiftClicked() ? 10000000000D: 1000000000);
+				if (action.isRightClick()) price = price - (action.isShiftClick() ? 10000000000D: 1000000000);
+				else price = price + (action.isShiftClick() ? 10000000000D: 1000000000);
 				if (price <= 0) price = 0.1;
 				openPriceEditor(p, shop, item, string, price);
 				return false;
@@ -485,10 +469,10 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(15, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack stack, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				double price = worth;
-				if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 1000000000000D: 100000000000D);
-				else price = price + (action.isShiftClicked() ? 1000000000000D: 100000000000D);
+				if (action.isRightClick()) price = price - (action.isShiftClick() ? 1000000000000D: 100000000000D);
+				else price = price + (action.isShiftClick() ? 1000000000000D: 100000000000D);
 				if (price <= 0) price = 0.1;
 				openPriceEditor(p, shop, item, string, price);
 				return false;
@@ -499,10 +483,10 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(16, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack stack, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				double price = worth;
-				if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 100000000000000D: 10000000000000D);
-				else price = price + (action.isShiftClicked() ? 100000000000000D: 10000000000000D);
+				if (action.isRightClick()) price = price - (action.isShiftClick() ? 100000000000000D: 10000000000000D);
+				else price = price + (action.isShiftClick() ? 100000000000000D: 10000000000000D);
 				if (price <= 0) price = 0.1;
 				openPriceEditor(p, shop, item, string, price);
 				return false;
@@ -513,10 +497,10 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(17, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack stack, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				double price = worth;
-				if (action.isRightClicked()) price = price - (action.isShiftClicked() ? 10000000000000000D: 1000000000000000D);
-				else price = price + (action.isShiftClicked() ? 10000000000000000D: 1000000000000000D);
+				if (action.isRightClick()) price = price - (action.isShiftClick() ? 10000000000000000D: 1000000000000000D);
+				else price = price + (action.isShiftClick() ? 10000000000000000D: 1000000000000000D);
 				if (price <= 0) price = 0.1;
 				openPriceEditor(p, shop, item, string, price);
 				return false;
@@ -527,12 +511,12 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(20, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int arg1, ItemStack arg2, ClickAction arg3) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				QuickSell.cfg.setValue("shops." + shop.getID() + ".price." + string, worth);
 				QuickSell.cfg.save();
 				quicksell.reload();
 				
-				QuickSell.local.sendTranslation(p, "commands.price-set", false, new Variable("%item%", string), new Variable("%shop%", shop.getName()), new Variable("%price%", DoubleHandler.getFancyDouble(worth)));
+				QuickSell.local.sendMessage(p, "commands.price-set", false, new Variable("%item%", string), new Variable("%shop%", shop.getName()), new Variable("%price%", DoubleHandler.getFancyDouble(worth)));
 				openShopContentEditor(p, Shop.getShop(shop.getID()), 1);
 				return false;
 			}
@@ -541,18 +525,18 @@ public class ShopEditor implements Listener {
 		menu.addMenuClickHandler(24, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int arg1, ItemStack arg2, ClickAction arg3) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction action) {
 				openShopContentEditor(p, Shop.getShop(shop.getID()), 1);
 				return false;
 			}
 		});
-		
-		menu.open(p);
+
+		Bukkit.getScheduler().runTask(QuickSell.getInstance(), (runnable) -> menu.open(p));
 	}
 
 	public void openShopInheritanceEditor(final Player p, final Shop s) {
 		quicksell.reload();
-		ChestMenu menu = new ChestMenu("&6QuickSell - Shop Editor");
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(), "&6QuickSell - Shop Editor");
 		
 		menu.addMenuOpeningHandler((player) -> {
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1F);
@@ -566,7 +550,7 @@ public class ShopEditor implements Listener {
 				final boolean inherit = QuickSell.cfg.getStringList("shops." + s.getID() + ".inheritance").contains(shop.getID());
 				
 				menu.addItem(i, new CustomItem(shop.getItem(ShopStatus.UNLOCKED), shop.getName(), "", "&7Inherit: " + (inherit ? "&2&l\u2714": "&4&l\u2718"), "", "&7&oClick to toggle"));
-				menu.addMenuClickHandler(i, (player, slot, item, action) -> {
+				menu.addMenuClickHandler(i, (player, slot, newitem, item, action) -> {
 					List<String> shops = QuickSell.cfg.getStringList("shops." + s.getID() + ".inheritance");
 					if (inherit) shops.remove(shop.getID());
 					else shops.add(shop.getID());
@@ -577,8 +561,14 @@ public class ShopEditor implements Listener {
 				});
 			}
 		}
-		
-		menu.open(p);
+
+		if (menu.getSize() < 9) {
+			QuickSell.local.sendMessage(p, "editor.no-inheritance");
+			return;
+		}
+
+		menu.setSize(54);
+		Bukkit.getScheduler().runTask(QuickSell.getInstance(), (runnable) -> menu.open(p));
 	}
 
 }

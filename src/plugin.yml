@@ -3,11 +3,11 @@ version: ${project.version}
 author: mrCookieSlime
 website: http://thebusybiscuit.github.io/
 depend: [Vault]
-softdepend: [CS-CoreLib, mcMMO, Citizens, PrisonGems]
+softdepend: [mcMMO, Citizens, PrisonGems]
 
 main: me.mrCookieSlime.QuickSell.QuickSell
 
-api-version: 1.14
+api-version: 1.16
 
 commands:
   sell:

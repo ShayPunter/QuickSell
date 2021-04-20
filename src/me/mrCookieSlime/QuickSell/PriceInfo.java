@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Math.DoubleHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.general.String.StringUtils;
-
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
+import me.mrCookieSlime.QuickSell.utils.StringUtils;
+import me.mrCookieSlime.QuickSell.utils.maths.DoubleHandler;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

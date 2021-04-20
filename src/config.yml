@@ -16,7 +16,7 @@ boosters:
 commands-on-sell: []
 sound:
   enabled: true
-  sound: ORB_PICKUP
+  sound: ENTITY_EXPERIENCE_ORB_PICKUP
 shops:
   A:
     name: '&9A - Shop'

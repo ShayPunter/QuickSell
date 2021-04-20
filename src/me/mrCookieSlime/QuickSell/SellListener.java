@@ -3,9 +3,9 @@ package me.mrCookieSlime.QuickSell;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Variable;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Math.DoubleHandler;
+import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
+import me.mrCookieSlime.QuickSell.utils.Variable;
+import me.mrCookieSlime.QuickSell.utils.maths.DoubleHandler;
 import me.mrCookieSlime.QuickSell.SellEvent.Type;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.BoosterType;
@@ -38,7 +38,7 @@ public class SellListener implements Listener {
 			if (e.getPlayer().hasPermission("QuickSell.sign.create")) e.setLine(0, prefix);
 			else {
 				e.setCancelled(true);
-				QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-permission", false);
+				QuickSell.local.sendMessage(e.getPlayer(), "messages.no-permission", false);
 			}
 		}
 		prefix = ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sellall-sign-prefix"));
@@ -46,7 +46,7 @@ public class SellListener implements Listener {
 			if (e.getPlayer().hasPermission("QuickSell.sign.create")) e.setLine(0, prefix);
 			else {
 				e.setCancelled(true);
-				QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-permission", false);
+				QuickSell.local.sendMessage(e.getPlayer(), "messages.no-permission", false);
 			}
 		}
 	}
@@ -72,7 +72,7 @@ public class SellListener implements Listener {
 							if (item.contains(" ")) item = item.replace(" ", "_");
 							shop.sellall(e.getPlayer(), item, Type.SELLALL);
 						}
-						else QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-access", false);
+						else QuickSell.local.sendMessage(e.getPlayer(), "messages.no-access", false);
 					}
 					else if (QuickSell.cfg.getBoolean("options.open-only-shop-with-permission")) {
 						if (Shop.getHighestShop(e.getPlayer()) != null) {
@@ -81,9 +81,9 @@ public class SellListener implements Listener {
 							if (item.contains(" ")) item = item.replace(" ", "_");
 							Shop.getHighestShop(e.getPlayer()).sellall(e.getPlayer(), item, Type.SELLALL);
 						}
-						else QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-access", false);
+						else QuickSell.local.sendMessage(e.getPlayer(), "messages.no-access", false);
 					}
-					else QuickSell.local.sendTranslation(e.getPlayer(), "messages.unknown-shop", false);
+					else QuickSell.local.sendMessage(e.getPlayer(), "messages.unknown-shop", false);
 					e.setCancelled(true);
 				}
 			}
@@ -97,20 +97,20 @@ public class SellListener implements Listener {
 					if (shop != null) shop.showPrices(e.getPlayer());
 					else if (QuickSell.cfg.getBoolean("options.open-only-shop-with-permission")) {
 						if (Shop.getHighestShop(e.getPlayer()) != null) Shop.getHighestShop(e.getPlayer()).showPrices(e.getPlayer());
-						else QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-access", false);
+						else QuickSell.local.sendMessage(e.getPlayer(), "messages.no-access", false);
 					}
 				}
 				else if (sign.getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sellall-sign-prefix")))) {
 					Shop shop = Shop.getShop(sign.getLine(1));
 					if (shop != null) {
 						if (shop.hasUnlocked(e.getPlayer())) shop.showPrices(e.getPlayer());
-						else QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-access", false);
+						else QuickSell.local.sendMessage(e.getPlayer(), "messages.no-access", false);
 					}
 					else if (QuickSell.cfg.getBoolean("options.open-only-shop-with-permission")) {
 						if (Shop.getHighestShop(e.getPlayer()) != null) Shop.getHighestShop(e.getPlayer()).showPrices(e.getPlayer());
-						else QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-access", false);
+						else QuickSell.local.sendMessage(e.getPlayer(), "messages.no-access", false);
 					}
-					else QuickSell.local.sendTranslation(e.getPlayer(), "messages.unknown-shop", false);
+					else QuickSell.local.sendMessage(e.getPlayer(), "messages.unknown-shop", false);
 					e.setCancelled(true);
 				}
 			}
@@ -165,7 +165,7 @@ public class SellListener implements Listener {
 							money = money + money * (booster.getMultiplier() - 1);
 						}
 					}
-					QuickSell.local.sendTranslation(p, "messages.estimate", false, new Variable("{MONEY}", String.valueOf(DoubleHandler.fixDouble(money, 2))));
+					QuickSell.local.sendMessage(p, "messages.estimate", false, new Variable("{MONEY}", String.valueOf(DoubleHandler.fixDouble(money, 2))));
 				}
 				if (e.getSlot() == 9 * QuickSell.cfg.getInt("options.sell-gui-rows") - 4) e.setCancelled(true);
 				

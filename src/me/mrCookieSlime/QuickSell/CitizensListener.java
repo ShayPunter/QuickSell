@@ -22,11 +22,11 @@ public class CitizensListener implements Listener {
 		if (QuickSell.getInstance().npcs.contains(String.valueOf(npc.getId()))) {
 			String action = QuickSell.getInstance().npcs.getString(String.valueOf(npc.getId()));
 			Shop shop = Shop.getShop(action.split(" ; ")[0]);
-			if (shop == null) QuickSell.local.sendTranslation(e.getClicker(), "messages.unknown-shop", false);
+			if (shop == null) QuickSell.local.sendMessage(e.getClicker(), "messages.unknown-shop", false);
 			else {
 				if (action.split(" ; ")[1].equalsIgnoreCase("SELL")) ShopMenu.open(e.getClicker(), shop);
 				else if (shop.hasUnlocked(e.getClicker())) shop.sellall(e.getClicker(), "", Type.CITIZENS);
-				else QuickSell.local.sendTranslation(e.getClicker(), "messages.no-access", false);
+				else QuickSell.local.sendMessage(e.getClicker(), "messages.no-access", false);
 			}
 		}
 	}
@@ -39,7 +39,7 @@ public class CitizensListener implements Listener {
 			Player p = (Player) damager;
 			String action = QuickSell.getInstance().npcs.getString(String.valueOf(npc.getId()));
 			Shop shop = Shop.getShop(action.split(" ; ")[0]);
-			if (shop == null) QuickSell.local.sendTranslation(p, "messages.unknown-shop", false);
+			if (shop == null) QuickSell.local.sendMessage(p, "messages.unknown-shop", false);
 			else shop.showPrices(p);
 		}
 	}

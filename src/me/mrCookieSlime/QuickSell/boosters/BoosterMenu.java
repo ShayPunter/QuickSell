@@ -4,27 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.github.thebusybiscuit.cscorelib2.inventory.ChestMenu;
+import io.github.thebusybiscuit.cscorelib2.inventory.ClickAction;
+import io.github.thebusybiscuit.cscorelib2.inventory.MenuClickHandler;
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
+import me.mrCookieSlime.QuickSell.QuickSell;
+import me.mrCookieSlime.QuickSell.utils.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu.MenuClickHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.CSCoreLibPlugin.general.String.StringUtils;
 
 public class BoosterMenu {
 
 	public static void showBoosterOverview(Player p) {
-		ChestMenu menu = new ChestMenu("&3Booster Overview");
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(), "&3Booster Overview");
 		
 		menu.addItem(1, new CustomItem(Material.GOLD_INGOT, "&bBoosters (Money)", "&7Current Multiplier: &b" + Booster.getMultiplier(p.getName(), BoosterType.MONETARY), "", "&7\u21E8 Click for Details"));
 		menu.addMenuClickHandler(1, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				showBoosterDetails(p, BoosterType.MONETARY);
 				return false;
 			}
@@ -34,7 +35,7 @@ public class BoosterMenu {
 		menu.addMenuClickHandler(7, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				showBoosterDetails(p, BoosterType.EXP);
 				return false;
 			}
@@ -44,23 +45,24 @@ public class BoosterMenu {
 	}
 
 	public static void showBoosterDetails(Player p, BoosterType type) {
-		ChestMenu menu = new ChestMenu("&3" + StringUtils.format(type.toString()) + " Boosters");
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(), "&3" + StringUtils.format(type.toString()) + " Boosters");
 		
 		menu.addItem(1, new CustomItem(Material.GOLD_INGOT, "&bBoosters (Money)", "&7Current Multiplier: &b" + Booster.getMultiplier(p.getName(), BoosterType.MONETARY), "", "&7\u21E8 Click for Details"));
 		menu.addMenuClickHandler(1, new MenuClickHandler() {
-			
+
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				showBoosterDetails(p, BoosterType.MONETARY);
 				return false;
 			}
+
 		});
 		
 		menu.addItem(7, new CustomItem(Material.EXPERIENCE_BOTTLE, "&bBoosters (Experience)", "&7Current Multiplier: &b" + Booster.getMultiplier(p.getName(), BoosterType.EXP), "", "&7\u21E8 Click for Details"));
 		menu.addMenuClickHandler(7, new MenuClickHandler() {
 			
 			@Override
-			public boolean onClick(Player p, int slot, ItemStack item, ClickAction action) {
+			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
 				showBoosterDetails(p, BoosterType.EXP);
 				return false;
 			}
@@ -70,7 +72,7 @@ public class BoosterMenu {
 		
 		for (Booster booster: Booster.getBoosters(p.getName(), type)) {
 			menu.addItem(index, getBoosterItem(booster));
-			menu.addMenuClickHandler(index, (player, slot, stack, action) -> false);
+			menu.addMenuClickHandler(index, (plugin, player, slot, stack, action) -> false);
 			
 			index++;
 		}
