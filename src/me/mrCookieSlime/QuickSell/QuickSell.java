@@ -91,9 +91,13 @@ public class QuickSell extends JavaPlugin {
 		for (int i = 0; i < 1000; i++) {
 			if (new File("data-storage/QuickSell/boosters/" + i + ".booster").exists()) {
 				try {
-					if (new Config(new File("data-storage/QuickSell/boosters/" + i + ".booster")).getBoolean("private")) new PrivateBooster(i);
-					else new Booster(i);
+					if (new Config(new File("data-storage/QuickSell/boosters/" + i + ".booster")).getBoolean("private"))
+						new PrivateBooster(i);
+					else
+						new Booster(i);
 				} catch (ParseException e) {
+					log(Level.SEVERE, "There was an error parsing a booster. ID: " + i);
+					e.printStackTrace();
 				}
 			}
 		}
@@ -108,10 +112,10 @@ public class QuickSell extends JavaPlugin {
 		economy = null;
 		local = null;
 		events = null;
-		
-		for (SellProfile profile: SellProfile.profiles.values()) {
+
+		SellProfile.profiles.forEach((uuid, profile) -> {
 			profile.save();
-		}
+		});
 		
 		SellProfile.profiles = null;
 		Booster.active = null;
