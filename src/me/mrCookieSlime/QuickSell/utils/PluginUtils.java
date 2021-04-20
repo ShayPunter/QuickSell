@@ -54,7 +54,7 @@ public class PluginUtils {
     public void setupConfig() {
         FileConfiguration config = plugin.getConfig();
         config.options().copyDefaults(true);
-        config.options().header("\nName: " + plugin.getName() + "\nAuthor: " + plugin.getDescription().getAuthors().get(0) + "\n\nDo not modify the Config while the Server is running\notherwise bad things might happen!\n\nThis Plugin also requires CS-CoreLib to run!\nIf you don't have it installed already, its going to be\nautomatically installed for you\n\nThis Plugin utilises an Auto-Updater. If you want to turn that off,\nsimply set options -> auto-update to false");
+        config.options().header("\nName: " + plugin.getName() + "\nAuthor: " + plugin.getDescription().getAuthors() + "\n\nDo not modify the Config while the Server is running\notherwise bad things might happen!\n");
         plugin.saveConfig();
 
         cfg = new Config(plugin);
