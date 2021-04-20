@@ -104,9 +104,9 @@ public class QuickSell extends JavaPlugin {
 		// Commands
 
 		for (int i = 0; i < 1000; i++) {
-			if (new File("data-storage/QuickSell/boosters/" + i + ".booster").exists()) {
+			if (new File(getDataFolder() + File.separator + "data-storage/boosters/" + i + ".booster").exists()) {
 				try {
-					if (new Config(new File("data-storage/QuickSell/boosters/" + i + ".booster")).getBoolean("private")) new PrivateBooster(i);
+					if (new Config(new File(getDataFolder() + File.separator + "data-storage/boosters/" + i + ".booster")).getBoolean("private")) new PrivateBooster(i);
 					else new Booster(i);
 				} catch (ParseException e) {
 				}
