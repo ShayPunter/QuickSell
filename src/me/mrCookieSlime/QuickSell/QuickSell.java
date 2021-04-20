@@ -124,12 +124,13 @@ public class QuickSell extends JavaPlugin {
 	private boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 	    if (economyProvider != null) {
-	      economy = (Economy)economyProvider.getProvider();
+	      economy = economyProvider.getProvider();
 	    }
-
 	    return economy != null;
 	}
-	
+
+
+	// Todo: Convert this over into its own classes
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("sell")) {
@@ -401,18 +402,33 @@ public class QuickSell extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Checks if Citizens2 is installed and active
+	 * @return Boolean
+	 */
 	public boolean isCitizensInstalled() {
 		return citizens;
 	}
 
+	/**
+	 * Checks if PrisonUtils is installed and active
+	 * @return Boolean
+	 */
 	public boolean isPrisonUtilsInstalled() {
 		return backpacks;
 	}
 
+	/**
+	 * Check if MCMMO is installed and active
+	 * @return Boolean
+	 */
 	public boolean isMCMMOInstalled() {
 		return mcmmo;
 	}
 
+	/**
+	 * Reloads the various config files
+	 */
 	public void reload() {
 		cfg.reload();
 		Shop.reset();
@@ -438,19 +454,35 @@ public class QuickSell extends JavaPlugin {
 		}
 		cfg.save();
 	}
-	
+
+	/**
+	 * Register a sell event
+	 * @param event SellEvent
+	 */
 	public static void registerSellEvent(SellEvent event) {
 		events.add(event);
 	}
 
+	/**
+	 * Get a list of sell events
+	 * @return List<SellEvent>
+	 */
 	public static List<SellEvent> getSellEvents() {
 		return events;
 	}
 
+	/**
+	 * Get the plugin instance
+	 * @return QuickSell
+	 */
 	public static QuickSell getInstance() {
 		return instance;
 	}
 
+	/**
+	 * Checks if PrisonGems is installed and active
+	 * @return Boolean
+	 */
 	public boolean isPrisonGemsInstalled() {
 		return prisongems;
 	}
@@ -546,6 +578,9 @@ public class QuickSell extends JavaPlugin {
 		local.setDefaultMessage("pbooster.deactivate.PRISONGEMS", "&4Your &c%multiplier%x Booster (Gems) wore off!");
 	}
 
+	/**
+	 * Sets up the first time configuration options
+	 */
 	private void setupConfigOptions() {
 		if (cfg.contains("options.open-only-shop-with-permission")) {
 			cfg.setValue("shop.enable-hierarchy", cfg.getBoolean("options.open-only-shop-with-permission"));
