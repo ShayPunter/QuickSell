@@ -137,8 +137,8 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>GitHub</name>
-            <url>https://maven.pkg.github.com/ShayPunter/QuickSell</url>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/shaypunter/quicksell</url>
         </repository>
     </distributionManagement>
 
