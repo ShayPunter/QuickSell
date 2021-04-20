@@ -4,10 +4,8 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Dependency;
 import me.mrCookieSlime.QuickSell.QuickSell;
 import me.mrCookieSlime.QuickSell.Shop;
-import me.mrCookieSlime.QuickSell.ShopMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,9 +13,6 @@ import org.bukkit.entity.Player;
 @CommandAlias("price|prices")
 @CommandPermission("quicksell.prices")
 public class PricesCommand extends BaseCommand {
-
-    @Dependency("QuickSell")
-    public static QuickSell plugin;
 
     @Default
     public static void onDefault(CommandSender sender, String shopName) {

@@ -2,22 +2,14 @@ package me.mrCookieSlime.QuickSell.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import me.mrCookieSlime.QuickSell.QuickSell;
-import me.mrCookieSlime.QuickSell.Shop;
-import me.mrCookieSlime.QuickSell.ShopMenu;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.BoosterType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 @CommandAlias("booster")
 @CommandPermission("quicksell.booster")
 public class BoosterCommand extends BaseCommand {
-
-    @Dependency("QuickSell")
-    public static QuickSell plugin;
 
     @Default
     public static void onDefault(CommandSender sender, String type, String player, Double multi, int duration) {

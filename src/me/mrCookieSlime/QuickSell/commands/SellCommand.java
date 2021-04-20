@@ -3,7 +3,6 @@ package me.mrCookieSlime.QuickSell.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Dependency;
 import me.mrCookieSlime.QuickSell.QuickSell;
 import me.mrCookieSlime.QuickSell.Shop;
 import me.mrCookieSlime.QuickSell.ShopMenu;
@@ -13,9 +12,6 @@ import org.bukkit.entity.Player;
 
 @CommandAlias("sell")
 public class SellCommand extends BaseCommand {
-
-    @Dependency("QuickSell")
-    public static QuickSell plugin;
 
     @Default
     public static void onDefault(CommandSender sender, String shopName) {

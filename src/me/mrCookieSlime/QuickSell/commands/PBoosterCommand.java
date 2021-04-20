@@ -2,7 +2,6 @@ package me.mrCookieSlime.QuickSell.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import me.mrCookieSlime.QuickSell.QuickSell;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.BoosterType;
 import me.mrCookieSlime.QuickSell.boosters.PrivateBooster;
@@ -12,9 +11,6 @@ import org.bukkit.command.CommandSender;
 @CommandAlias("pbooster")
 @CommandPermission("quicksell.booster")
 public class PBoosterCommand extends BaseCommand {
-
-    @Dependency("QuickSell")
-    public static QuickSell plugin;
 
     @Default
     public static void onDefault(CommandSender sender, String type, String player, Double multi, int duration) {

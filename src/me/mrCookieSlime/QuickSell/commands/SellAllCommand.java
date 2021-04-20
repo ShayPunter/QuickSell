@@ -7,16 +7,12 @@ import co.aikar.commands.annotation.Dependency;
 import me.mrCookieSlime.QuickSell.QuickSell;
 import me.mrCookieSlime.QuickSell.SellEvent;
 import me.mrCookieSlime.QuickSell.Shop;
-import me.mrCookieSlime.QuickSell.ShopMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandAlias("sellall")
 public class SellAllCommand extends BaseCommand {
-
-    @Dependency("QuickSell")
-    public static QuickSell plugin;
 
     @Default
     public static void onDefault(CommandSender sender, String shopName) {
