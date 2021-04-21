@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.github.thebusybiscuit.cscorelib2.config.Config;
-import me.mrCookieSlime.QuickSell.SellEvent.Type;
+import me.mrCookieSlime.QuickSell.interfaces.SellEvent.Type;
 
 import org.bukkit.entity.Player;
 

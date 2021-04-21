@@ -7,6 +7,7 @@ import java.util.Map;
 
 import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
 import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
+import me.mrCookieSlime.QuickSell.interfaces.SellEvent;
 import me.mrCookieSlime.QuickSell.utils.Variable;
 import me.mrCookieSlime.QuickSell.utils.maths.DoubleHandler;
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.mrCookieSlime.PrisonUtils.Backpacks;
-import me.mrCookieSlime.QuickSell.SellEvent.Type;
+import me.mrCookieSlime.QuickSell.interfaces.SellEvent.Type;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.BoosterType;
 

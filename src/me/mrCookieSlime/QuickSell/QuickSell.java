@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import co.aikar.commands.PaperCommandManager;
 import io.github.thebusybiscuit.cscorelib2.config.Config;
 import me.mrCookieSlime.QuickSell.commands.*;
+import me.mrCookieSlime.QuickSell.interfaces.SellEvent;
 import me.mrCookieSlime.QuickSell.listeners.CitizensListener;
 import me.mrCookieSlime.QuickSell.listeners.SellListener;
 import me.mrCookieSlime.QuickSell.utils.Localization;

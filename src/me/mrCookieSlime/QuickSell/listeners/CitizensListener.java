@@ -1,7 +1,7 @@
 package me.mrCookieSlime.QuickSell.listeners;
 
 import me.mrCookieSlime.QuickSell.QuickSell;
-import me.mrCookieSlime.QuickSell.SellEvent.Type;
+import me.mrCookieSlime.QuickSell.interfaces.SellEvent.Type;
 import me.mrCookieSlime.QuickSell.Shop;
 import me.mrCookieSlime.QuickSell.ShopMenu;
 import net.citizensnpcs.api.event.NPCDamageByEntityEvent;

@@ -10,7 +10,7 @@ import me.mrCookieSlime.QuickSell.Shop;
 import me.mrCookieSlime.QuickSell.ShopMenu;
 import me.mrCookieSlime.QuickSell.utils.Variable;
 import me.mrCookieSlime.QuickSell.utils.maths.DoubleHandler;
-import me.mrCookieSlime.QuickSell.SellEvent.Type;
+import me.mrCookieSlime.QuickSell.interfaces.SellEvent.Type;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.BoosterType;
 
