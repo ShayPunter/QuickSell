@@ -3,7 +3,7 @@ package me.mrCookieSlime.QuickSell.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
-import me.mrCookieSlime.QuickSell.boosters.BoosterMenu;
+import me.mrCookieSlime.QuickSell.boosters.menu.BoosterMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
