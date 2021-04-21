@@ -15,17 +15,20 @@ import java.util.logging.Level;
 import co.aikar.commands.PaperCommandManager;
 import io.github.thebusybiscuit.cscorelib2.config.Config;
 import me.mrCookieSlime.QuickSell.commands.*;
+import me.mrCookieSlime.QuickSell.listeners.CitizensListener;
+import me.mrCookieSlime.QuickSell.listeners.SellListener;
 import me.mrCookieSlime.QuickSell.utils.Localization;
 import me.mrCookieSlime.QuickSell.utils.PluginUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.PrivateBooster;
-import me.mrCookieSlime.QuickSell.boosters.XPBoosterListener;
+import me.mrCookieSlime.QuickSell.listeners.XPBoosterListener;
 import net.milkbowl.vault.economy.Economy;
 
 public class QuickSell extends JavaPlugin {
@@ -97,9 +100,10 @@ public class QuickSell extends JavaPlugin {
 		setupEconomy();
 
 		// Listeners
-		new SellListener(this);
-		new XPBoosterListener(this);
-		if (isCitizensInstalled()) new CitizensListener(this);
+		PluginManager pluginManager = getServer().getPluginManager();
+		pluginManager.registerEvents(new XPBoosterListener(), this);
+		pluginManager.registerEvents(new CitizensListener(), this);
+		pluginManager.registerEvents(new SellListener(), this);
 
 		// Commands
 		commandManager.registerCommand(new BoosterCommand());
