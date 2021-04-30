@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 public class PBoosterCommand extends BaseCommand {
 
     @Default
+    @Syntax("<Booster Type> <Player> <Multi> <Duration In Mins>")
     public static void onDefault(CommandSender sender, String type, String player, Double multi, int duration) {
         BoosterType boosterType = type.equalsIgnoreCase("all") ? null : BoosterType.valueOf(type.toUpperCase());
 

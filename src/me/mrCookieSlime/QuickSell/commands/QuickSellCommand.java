@@ -42,6 +42,7 @@ public class QuickSellCommand extends BaseCommand {
     }
 
     @Subcommand("edit")
+    @Syntax("<Shop Name> <Item> <Price>")
     public static void onEdit(CommandSender sender, String shop, String item, Double price) {
         if (Shop.getShop(shop) == null) {
             QuickSell.local.sendMessage(sender, "messages.unknown-shop", false);
@@ -59,6 +60,7 @@ public class QuickSellCommand extends BaseCommand {
     }
 
     @Subcommand("create")
+    @Syntax("<Shop Name>")
     public static void onCreate(CommandSender sender, String shopName) {
         if (shopName == null) {
             QuickSell.local.sendMessage(sender, "commands.usage", false, new Variable("%usage%", "/quicksell create <ShopName>"));
@@ -75,6 +77,7 @@ public class QuickSellCommand extends BaseCommand {
     }
 
     @Subcommand("delete")
+    @Syntax("<Shop Name>")
     public static void onDelete(CommandSender sender, String shopName) {
         if (shopName == null) {
             QuickSell.local.sendMessage(sender, "commands.usage", false, new Variable("%usage%", "/quicksell delete <ShopName>"));
@@ -91,6 +94,7 @@ public class QuickSellCommand extends BaseCommand {
     }
 
     @Subcommand("linknpc")
+    @Syntax("<Shop Name> <sell/sellall>")
     public static void onNPCLink(CommandSender sender, String shopName, String type) {
         if (!plugin.isCitizensInstalled()) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "Citizens is not installed on this server!"));
@@ -144,6 +148,7 @@ public class QuickSellCommand extends BaseCommand {
     }
 
     @Subcommand("stopboosters")
+    @Syntax("[Player]")
     public static void stopBoosters(CommandSender sender, @Optional String player) {
         Iterator<Booster> boosters = Booster.iterate();
 
