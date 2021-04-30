@@ -16,7 +16,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.function.Consumer;
 
 public class ShopMenu {
-	
+
+	/**
+	 * Opens a shop menu for a player
+	 * @param p Player
+	 * @param shop Shop
+	 */
 	public static void open(Player p, Shop shop) {
 		if (shop.hasUnlocked(p)) {
 			Inventory inv = Bukkit.createInventory(null, 9 * QuickSell.cfg.getInt("options.sell-gui-rows"), ChatColor.translateAlternateColorCodes('&', QuickSell.local.getMessage("menu.title")));
@@ -35,87 +40,77 @@ public class ShopMenu {
 			}
 			p.openInventory(inv);
 			QuickSell.shop.put(p.getUniqueId(), shop);
+			return;
 		}
-		else QuickSell.local.sendMessage(p, "messages.no-access", false);
+
+		QuickSell.local.sendMessage(p, "messages.no-access", false);
 	}
-	
-	
+
+	/**
+	 * Opens a shop menu based on the hierarchy
+	 * @param p Player
+	 */
 	public static void openMenu(Player p) {
 		if (QuickSell.cfg.getBoolean("shop.enable-hierarchy")) {
 			if (Shop.getHighestShop(p) != null) {
 				open(p, Shop.getHighestShop(p));
+				return;
 			}
-			else QuickSell.local.sendMessage(p, "messages.no-access", false);
+			QuickSell.local.sendMessage(p, "messages.no-access", false);
+			return;
 		}
-		else {
-			ChestMenu menu = new ChestMenu(QuickSell.getInstance(), QuickSell.local.getMessage("menu.title"));
-			
-			for (int i = 0; i < Shop.list().size(); i++) {
-				if (Shop.list().get(i) != null) {
-					final Shop shop = Shop.list().get(i);
-					menu.addItem(i, shop.getItem(shop.hasUnlocked(p) ? ShopStatus.UNLOCKED: ShopStatus.LOCKED));
-					menu.addMenuClickHandler(i, new MenuClickHandler() {
 
-						@Override
-						public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
-							ShopMenu.open(p, shop);
-							return false;
-						}
+		ChestMenu menu = new ChestMenu(QuickSell.getInstance(), QuickSell.local.getMessage("menu.title"));
 
-					});
-				}
+		for (int i = 0; i < Shop.list().size(); i++) {
+			if (Shop.list().get(i) != null) {
+				final Shop shop = Shop.list().get(i);
+				menu.addItem(i, shop.getItem(shop.hasUnlocked(p) ? ShopStatus.UNLOCKED: ShopStatus.LOCKED));
+				menu.addMenuClickHandler(i, (player, i1, itemStack, itemStack1, clickAction) -> {
+					ShopMenu.open(p, shop);
+					return false;
+				});
 			}
-			menu.open(p);
 		}
+		menu.open(p);
+
 	}
 	
 	final static int shop_size = 45;
-	
-	@SuppressWarnings("deprecation")
+
+	/**
+	 * Opens a GUI displaying shop items and prices to a player
+	 * @param p Player
+	 * @param shop Shop
+	 * @param page Integer
+	 */
 	public static void openPrices(Player p, final Shop shop, final int page) {
 		ChestMenu menu = new ChestMenu(QuickSell.getInstance(),"Shop Prices");
 		
-		menu.addMenuOpeningHandler((Consumer<Player>) p1 -> p1.playSound(p1.getLocation(), Sound.UI_BUTTON_CLICK, 1F, 1F));
+		menu.addMenuOpeningHandler(p1 -> p1.playSound(p1.getLocation(), Sound.UI_BUTTON_CLICK, 1F, 1F));
 		
 		int index = 0;
 		final int pages = shop.getPrices().getInfo().size() / shop_size + 1;
 		
 		for (int i = 45; i < 54; i++) {
 			menu.addItem(i, new CustomItem(Material.GRAY_STAINED_GLASS_PANE, " "));
-			menu.addMenuClickHandler(i, new MenuClickHandler() {
-
-				@Override
-				public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
-					return false;
-				}
-
-			});
+			menu.addMenuClickHandler(i, (player, i1, itemStack, itemStack1, clickAction) -> false);
 		}
 		
 		menu.addItem(46, new CustomItem(Material.LIME_STAINED_GLASS_PANE, "&r\u21E6 Previous Page", "", "&7(" + page + " / " + pages + ")"));
-		menu.addMenuClickHandler(46, new MenuClickHandler() {
-
-			@Override
-			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
-				int next = page - 1;
-				if (next < 1) next = pages;
-				if (next != page) openPrices(p, shop, next);
-				return false;
-			}
-
+		menu.addMenuClickHandler(46, (player, i, itemStack, itemStack1, clickAction) -> {
+			int next = page - 1;
+			if (next < 1) next = pages;
+			if (next != page) openPrices(p, shop, next);
+			return false;
 		});
 		
 		menu.addItem(52, new CustomItem(Material.LIME_STAINED_GLASS_PANE, "&rNext Page \u21E8", "", "&7(" + page + " / " + pages + ")"));
-		menu.addMenuClickHandler(52, new MenuClickHandler() {
-
-			@Override
-			public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
-				int next = page + 1;
-				if (next > pages) next = 1;
-				if (next != page) openPrices(p, shop, next);
-				return false;
-			}
-
+		menu.addMenuClickHandler(52, (player, i, itemStack, itemStack1, clickAction) -> {
+			int next = page + 1;
+			if (next > pages) next = 1;
+			if (next != page) openPrices(p, shop, next);
+			return false;
 		});
 		
 		int shop_index = shop_size * (page - 1);
@@ -127,14 +122,7 @@ public class ShopMenu {
 				final String string = shop.getPrices().getItems().get(target);
 				final ItemStack item = shop.getPrices().getItem(string);
 				menu.addItem(index, item);
-				menu.addMenuClickHandler(index, new MenuClickHandler() {
-
-					@Override
-					public boolean onClick(Player player, int i, ItemStack itemStack, ItemStack itemStack1, ClickAction clickAction) {
-						return false;
-					}
-
-				});
+				menu.addMenuClickHandler(index, (player, i12, itemStack, itemStack1, clickAction) -> false);
 				index++;
 			}
 			

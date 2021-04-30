@@ -2,6 +2,7 @@ package me.mrCookieSlime.QuickSell.boosters;
 
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PrivateBooster extends Booster {
@@ -17,10 +18,10 @@ public class PrivateBooster extends Booster {
 	public PrivateBooster(int id) throws ParseException {
 		super(id);
 	}
-	
+
 	@Override
 	public List<String> getAppliedPlayers() {
-		return Arrays.asList(owner);
+		return Collections.singletonList(owner);
 	}
 	
 	@Override

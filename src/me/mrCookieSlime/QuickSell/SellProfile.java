@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.github.thebusybiscuit.cscorelib2.config.Config;
-import me.mrCookieSlime.QuickSell.SellEvent.Type;
+import me.mrCookieSlime.QuickSell.interfaces.SellEvent.Type;
 
 import org.bukkit.entity.Player;
 
@@ -27,36 +27,60 @@ public class SellProfile {
 		profiles.put(uuid, this);
 		
 		if (QuickSell.cfg.getBoolean("shop.enable-logging")) {
-			for (String transaction: cfg.getKeys()) {
-				transactions.add(cfg.getString(transaction));
-			}
+			cfg.getKeys().forEach(transaction -> transactions.add(cfg.getString(transaction)));
 		}
 	}
-	
+
+	/**
+	 * Get a sell profile of a player
+	 * @param p Player
+	 * @return SellProfile
+	 */
 	public static SellProfile getProfile(Player p) {
 		return profiles.containsKey(p.getUniqueId()) ? profiles.get(p.getUniqueId()): new SellProfile(p);
 	}
-	
+
+	/**
+	 * Save and unload sell profiles
+	 */
 	public void unregister() {
 		save();
 		profiles.remove(uuid);
 	}
 
+	/**
+	 * Save sell profiles
+	 */
 	public void save() {
 		cfg.save();
 	}
-	
+
+	/**
+	 * Stores a transaction
+	 * @param type Type
+	 * @param soldItems Integer
+	 * @param money Double
+	 */
 	public void storeTransaction(Type type, int soldItems, double money) {
 		long timestamp = System.currentTimeMillis();
-		String string = String.valueOf(timestamp) + " __ " + type.toString() + " __ " + String.valueOf(soldItems) + " __ " + String.valueOf(money);
+		String string = timestamp + " __ " + type.toString() + " __ " + soldItems + " __ " + money;
 		cfg.setValue(String.valueOf(timestamp), string);
 		transactions.add(string);
 	}
-	
+
+	/**
+	 * Gets the transactions
+	 * @return List<String>
+	 */
 	public List<String> getTransactions() {
 		return transactions;
 	}
 
+	/**
+	 * Gets the most recent transactions
+	 * @param amount Integer. Amount of transactions to retrive
+	 * @return Transaction
+	 */
 	public Transaction getRecentTransactions(int amount) {
 		int items = 0;
 		double money = 0;
