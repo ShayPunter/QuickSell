@@ -69,9 +69,10 @@
         <dependency>
             <groupId>me.mrCookieSlime</groupId>
             <artifactId>PrisonUtils</artifactId>
-            <version>1.6.11</version>
+            <version>1.7</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/PrisonUtils v1.6.11.jar</systemPath>
+            <type>jar</type>
+            <systemPath>${project.basedir}/lib/PrisonUtils_v1.7.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
