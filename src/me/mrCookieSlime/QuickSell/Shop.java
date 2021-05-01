@@ -159,10 +159,10 @@ public class Shop {
 			ItemStack is = p.getInventory().getItem(slot);
 			if (getPrices().getPrice(is) > 0.0) {
 				items.add(is);
-				p.getInventory().setItem(slot, null);
+				p.getInventory().setItem(slot, new ItemStack(Material.AIR));
+				p.updateInventory();
 			}
 		}
-		p.getInventory();
 		sell(p, false, type, items.toArray(new ItemStack[items.size()]));
 	}
 
@@ -199,9 +199,7 @@ public class Shop {
 				if (getPrices().getPrice(item) > 0.0) {
 					sold = sold + item.getAmount();
 					money = money + getPrices().getPrice(item);
-				}
-
-				if (InvUtils.fits(p.getInventory(), item)) {
+				} else if (InvUtils.fits(p.getInventory(), item)) {
 					p.getInventory().addItem(item);
 				} else {
 					p.getWorld().dropItemNaturally(p.getLocation(), item);
@@ -233,7 +231,7 @@ public class Shop {
 			QuickSell.getSellEvents().forEach(event -> event.onSell(p, type, finalTotal, totalmoney));
 		}
 
-		if (!silent && total > 0)  {
+		if (!silent && total <= 0)  {
 			QuickSell.local.sendMessage(p, "messages.get-nothing", false);
 		}
 
