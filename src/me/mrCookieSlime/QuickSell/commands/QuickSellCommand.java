@@ -7,6 +7,7 @@ import me.mrCookieSlime.QuickSell.Shop;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.utils.StringUtils;
 import me.mrCookieSlime.QuickSell.utils.Variable;
+import me.mrCookieSlime.QuickSell.utils.maths.DoubleHandler;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
@@ -53,10 +54,13 @@ public class QuickSellCommand extends BaseCommand {
             QuickSell.local.sendMessage(sender, "commands.usage", false, new Variable("%usage%", "/quicksell edit <ShopName> <Item> <Price>"));
         }
 
-        QuickSell.cfg.setValue("shops." + shop + ".price" + item.toUpperCase(), price);
+        QuickSell.cfg.setValue("shops." + shop + ".price." + item.toUpperCase(), price);
         QuickSell.cfg.save();
         plugin.reload();
-        QuickSell.local.sendMessage(sender, "messages.unknown-shop", false);
+        QuickSell.local.sendMessage(sender, "commands.price-set", false
+                                    , new Variable("%item%", item.toUpperCase())
+                                    , new Variable("%price%", DoubleHandler.getFancyDouble(price))
+                                    , new Variable("%shop%", shop);
     }
 
     @Subcommand("create")
