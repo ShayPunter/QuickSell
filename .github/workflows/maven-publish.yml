@@ -28,7 +28,7 @@ jobs:
       - name: Publish to GitHub Packages Apache Maven
         run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
         env:
-          GITHUB_TOKEN: ${{ secrets.QS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BUILD_TOKEN }}
 
       - name: Set Release version env variable
         run: |
@@ -37,7 +37,7 @@ jobs:
       - name: Automatic Releases
         uses: marvinpinto/action-automatic-releases@v1.1.1
         with:
-          repo_token: "${{ secrets.QS_TOKEN }}"
+          repo_token: "${{ secrets.BUILD_TOKEN }}"
           automatic_release_tag: "${{ env.RELEASE_VERSION }}"
           prerelease: false
           run: mvn -B deploy --file pom.xml
