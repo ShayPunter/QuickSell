@@ -104,7 +104,8 @@ public class QuickSell extends JavaPlugin {
 		// Listeners
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new XPBoosterListener(), this);
-		pluginManager.registerEvents(new CitizensListener(), this);
+		if (citizens)
+			pluginManager.registerEvents(new CitizensListener(), this);
 		pluginManager.registerEvents(new SellListener(), this);
 
 		// Commands
