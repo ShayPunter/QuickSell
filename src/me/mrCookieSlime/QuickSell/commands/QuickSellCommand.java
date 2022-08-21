@@ -60,7 +60,7 @@ public class QuickSellCommand extends BaseCommand {
         QuickSell.local.sendMessage(sender, "commands.price-set", false
                                     , new Variable("%item%", item.toUpperCase())
                                     , new Variable("%price%", DoubleHandler.getFancyDouble(price))
-                                    , new Variable("%shop%", shop);
+                                    , new Variable("%shop%", shop));
     }
 
     @Subcommand("create")
