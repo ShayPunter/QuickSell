@@ -117,7 +117,7 @@ public class QuickSellCommand extends BaseCommand {
             return;
         }
 
-        if (!type.equalsIgnoreCase("sell") || !type.equalsIgnoreCase("sellall")) {
+        if (!type.equalsIgnoreCase("sell") && !type.equalsIgnoreCase("sellall")) {
             QuickSell.local.sendMessage(sender, "commands.usage", false, new Variable("%usage%", "/quicksell linknpc <ShopName> <sell/sellall>"));
             return;
         }
