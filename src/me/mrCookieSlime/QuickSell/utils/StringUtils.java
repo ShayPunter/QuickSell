@@ -1,43 +1,32 @@
 package me.mrCookieSlime.QuickSell.utils;
 
-import java.lang.reflect.Method;
-
-import me.mrCookieSlime.QuickSell.utils.reflection.PackageName;
-import me.mrCookieSlime.QuickSell.utils.reflection.ReflectionUtils;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 public class StringUtils {
 
-    private static Method copy, getName, toString;
-
-    static {
-        try {
-            copy = ReflectionUtils.getClass(PackageName.OBC, "inventory.CraftItemStack").getMethod("asNMSCopy", ItemStack.class);
-            getName = ReflectionUtils.getMethod(ReflectionUtils.getClass(PackageName.NMS, "ItemStack"), "getName");
-
-            if (ReflectionUtils.isVersion("v1_13_", "v1_14_", "v1_15_", "v1_16_", "v1_17_", "v1_18_", "v1_19_")) {
-                toString = ReflectionUtils.getMethod(ReflectionUtils.getClass(PackageName.NMS, "IChatBaseComponent"), "getString");
-            }
-        }
-        catch(Exception x) {
-            x.printStackTrace();
-        }
-    }
-
     public static String formatItemName(ItemStack item, boolean includePlural) {
-        String name = item.getType().toString();
-        try {
-            Object instance = copy.invoke(null, item);
+        String name;
 
-            if (toString == null) {
-                name = (String) getName.invoke(instance);
+        // First check if the item has a custom display name
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta.hasDisplayName()) {
+                name = meta.getDisplayName();
+            } else {
+                // Use the localized name if available (1.13+)
+                if (meta.hasLocalizedName()) {
+                    name = meta.getLocalizedName();
+                } else {
+                    // Fall back to formatted material name
+                    name = format(item.getType().toString());
+                }
             }
-            else {
-                name = (String) toString.invoke(getName.invoke(instance));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            // No meta, use formatted material name
+            name = format(item.getType().toString());
         }
-        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) name = item.getItemMeta().getDisplayName();
+
         if (includePlural) name = item.getAmount() + " " + name + "/s";
         return name;
     }
